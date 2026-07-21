@@ -1,0 +1,1255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Dashboard | Avatar AMSA</title>
+
+    <style>
+        :root {
+            --navy: #06233f;
+            --dark-navy: #03182c;
+            --teal: #07818c;
+            --teal-dark: #075d72;
+            --light-teal: #e8f7f7;
+            --background: #f4f7fa;
+            --white: #ffffff;
+            --text-dark: #172b3a;
+            --text-grey: #667085;
+            --border: #e4e7ec;
+            --success: #12b76a;
+            --warning: #f79009;
+            --danger: #d92d20;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: var(--background);
+            color: var(--text-dark);
+        }
+
+        button,
+        a {
+            font-family: inherit;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .dashboard-layout {
+            display: grid;
+            grid-template-columns: 265px 1fr;
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR */
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 265px;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 28px 20px;
+            color: white;
+            overflow-y: auto;
+            z-index: 1000;
+
+            background:
+                linear-gradient(
+                    180deg,
+                    #03182c,
+                    #06465d,
+                    #087f8c
+                );
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            padding: 0 8px;
+            margin-bottom: 38px;
+        }
+
+        .brand-logo {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 15px;
+            font-size: 25px;
+
+            background: rgba(255, 255, 255, 0.13);
+            border: 1px solid rgba(255, 255, 255, 0.17);
+        }
+
+        .brand-text h2 {
+            font-size: 20px;
+            margin-bottom: 3px;
+        }
+
+        .brand-text p {
+            color: rgba(255, 255, 255, 0.65);
+            font-size: 11px;
+        }
+
+        .menu-label {
+            padding: 0 12px;
+            margin-bottom: 10px;
+            color: rgba(255, 255, 255, 0.45);
+            font-size: 11px;
+            font-weight: bold;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+        }
+
+        .nav-menu {
+            display: grid;
+            gap: 8px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            padding: 13px 14px;
+            border-radius: 12px;
+            color: rgba(255, 255, 255, 0.78);
+            font-size: 14px;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: white;
+            background: rgba(255, 255, 255, 0.13);
+        }
+
+        .nav-icon {
+            width: 22px;
+            text-align: center;
+            font-size: 17px;
+        }
+
+        .sidebar-bottom {
+            margin-top: auto;
+            padding-top: 30px;
+        }
+
+        .student-card {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px;
+            margin-bottom: 13px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .avatar {
+            width: 42px;
+            height: 42px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
+            border-radius: 50%;
+            color: var(--navy);
+            background: white;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .student-info h4 {
+            font-size: 13px;
+            margin-bottom: 3px;
+        }
+
+        .student-info p {
+            color: rgba(255, 255, 255, 0.58);
+            font-size: 11px;
+        }
+
+        .logout-button {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            padding: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 11px;
+            color: white;
+            background: rgba(255, 255, 255, 0.06);
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .logout-button:hover {
+            background: rgba(255, 255, 255, 0.14);
+        }
+
+        /* MAIN CONTENT */
+
+        .main-content {
+            grid-column: 2;
+            width: 100%;
+            padding: 28px 34px 40px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .welcome-text h1 {
+            color: var(--navy);
+            font-size: 29px;
+            margin-bottom: 6px;
+        }
+
+        .welcome-text p {
+            color: var(--text-grey);
+            font-size: 14px;
+        }
+
+        .topbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .icon-button {
+            position: relative;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: white;
+            font-size: 18px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .icon-button:hover {
+            border-color: #b9c0c9;
+            transform: translateY(-1px);
+        }
+
+        .notification-dot {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 8px;
+            height: 8px;
+            border: 2px solid white;
+            border-radius: 50%;
+            background: var(--danger);
+        }
+
+        .profile-mini {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 5px 10px 5px 5px;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            background: white;
+        }
+
+        .profile-mini .avatar {
+            width: 38px;
+            height: 38px;
+            color: white;
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--teal),
+                    var(--navy)
+                );
+        }
+
+        .profile-mini h4 {
+            color: var(--navy);
+            font-size: 13px;
+            margin-bottom: 2px;
+        }
+
+        .profile-mini p {
+            color: var(--text-grey);
+            font-size: 11px;
+        }
+
+        /* HERO BANNER */
+
+        .hero-banner {
+            position: relative;
+            display: grid;
+            grid-template-columns: 1.3fr 0.7fr;
+            gap: 25px;
+            min-height: 245px;
+            padding: 36px;
+            margin-bottom: 28px;
+            overflow: hidden;
+            border-radius: 24px;
+            color: white;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #052847,
+                    #07677a,
+                    #07929b
+                );
+
+            box-shadow:
+                0 18px 42px rgba(5, 72, 91, 0.18);
+        }
+
+        .hero-banner::before {
+            content: "";
+            position: absolute;
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            top: -120px;
+            right: -70px;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .hero-banner::after {
+            content: "";
+            position: absolute;
+            width: 190px;
+            height: 190px;
+            border-radius: 50%;
+            bottom: -100px;
+            right: 170px;
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .hero-copy {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-label {
+            display: inline-block;
+            padding: 8px 13px;
+            margin-bottom: 17px;
+            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.13);
+            font-size: 11px;
+            font-weight: bold;
+            letter-spacing: 0.6px;
+            text-transform: uppercase;
+        }
+
+        .hero-copy h2 {
+            max-width: 600px;
+            font-size: 31px;
+            line-height: 1.2;
+            margin-bottom: 14px;
+        }
+
+        .hero-copy p {
+            max-width: 610px;
+            color: rgba(255, 255, 255, 0.76);
+            font-size: 14px;
+            line-height: 1.7;
+            margin-bottom: 24px;
+        }
+
+        .start-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 12px;
+            color: var(--navy);
+            background: white;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.16);
+            transition: 0.2s;
+        }
+
+        .start-button:hover {
+            transform: translateY(-2px);
+        }
+
+        .hero-avatar-area {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .ai-avatar {
+            width: 155px;
+            height: 155px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            font-size: 70px;
+
+            background:
+                radial-gradient(
+                    circle at 35% 30%,
+                    #ffffff,
+                    #d9f4f5 48%,
+                    #9fd5d9 100%
+                );
+
+            border: 8px solid rgba(255, 255, 255, 0.12);
+
+            box-shadow:
+                0 20px 45px rgba(0, 0, 0, 0.22);
+        }
+
+        /* STAT CARDS */
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 28px;
+        }
+
+        .stat-card {
+            padding: 22px;
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            background: white;
+            box-shadow: 0 8px 24px rgba(16, 24, 40, 0.04);
+        }
+
+        .stat-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 17px;
+        }
+
+        .stat-icon {
+            width: 43px;
+            height: 43px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 12px;
+            background: var(--light-teal);
+            font-size: 20px;
+        }
+
+        .trend {
+            padding: 5px 8px;
+            border-radius: 20px;
+            color: var(--success);
+            background: #ecfdf3;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .stat-card h3 {
+            color: var(--navy);
+            font-size: 26px;
+            margin-bottom: 5px;
+        }
+
+        .stat-card p {
+            color: var(--text-grey);
+            font-size: 13px;
+        }
+
+        /* CONTENT GRID */
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 22px;
+        }
+
+        .panel {
+            padding: 24px;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            background: white;
+            box-shadow: 0 8px 24px rgba(16, 24, 40, 0.04);
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 22px;
+        }
+
+        .panel-header h3 {
+            color: var(--navy);
+            font-size: 18px;
+        }
+
+        .view-all {
+            color: var(--teal);
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        /* RECENT ACTIVITY */
+
+        .activity-list {
+            display: grid;
+            gap: 14px;
+        }
+
+        .activity-item {
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            align-items: center;
+            gap: 14px;
+            padding: 14px;
+            border: 1px solid #eef0f3;
+            border-radius: 14px;
+            background: #fbfcfd;
+        }
+
+        .activity-icon {
+            width: 42px;
+            height: 42px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 12px;
+            background: var(--light-teal);
+            font-size: 18px;
+        }
+
+        .activity-text h4 {
+            color: var(--navy);
+            font-size: 13px;
+            margin-bottom: 4px;
+        }
+
+        .activity-text p {
+            color: var(--text-grey);
+            font-size: 12px;
+        }
+
+        .activity-score {
+            text-align: right;
+        }
+
+        .activity-score strong {
+            display: block;
+            color: var(--navy);
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .activity-score span {
+            color: var(--text-grey);
+            font-size: 11px;
+        }
+
+        /* PROGRESS */
+
+        .progress-list {
+            display: grid;
+            gap: 20px;
+        }
+
+        .progress-item {
+            display: grid;
+            gap: 8px;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+        }
+
+        .progress-label span:first-child {
+            color: #344054;
+            font-weight: bold;
+        }
+
+        .progress-label span:last-child {
+            color: var(--text-grey);
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 9px;
+            overflow: hidden;
+            border-radius: 20px;
+            background: #edf0f2;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 20px;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    var(--teal),
+                    #10aeb0
+                );
+        }
+
+        .readiness-card {
+            margin-top: 24px;
+            padding: 18px;
+            border-radius: 15px;
+            background:
+                linear-gradient(
+                    135deg,
+                    #edfafa,
+                    #f6fbfc
+                );
+        }
+
+        .readiness-card h4 {
+            color: var(--navy);
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .readiness-card p {
+            color: var(--text-grey);
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        /* MOBILE MENU */
+
+        .mobile-menu-button {
+            display: none;
+            width: 43px;
+            height: 43px;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid var(--border);
+            border-radius: 11px;
+            background: white;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .sidebar-overlay {
+            display: none;
+        }
+
+        /* RESPONSIVE */
+
+        @media (max-width: 1180px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .dashboard-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                transform: translateX(-100%);
+                transition: 0.25s ease;
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .sidebar-overlay {
+                position: fixed;
+                inset: 0;
+                z-index: 900;
+                background: rgba(0, 0, 0, 0.35);
+            }
+
+            .sidebar-overlay.show {
+                display: block;
+            }
+
+            .main-content {
+                grid-column: 1;
+                padding: 22px;
+            }
+
+            .mobile-menu-button {
+                display: flex;
+            }
+
+            .topbar {
+                align-items: flex-start;
+            }
+
+            .topbar-left {
+                display: flex;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .profile-mini {
+                display: none;
+            }
+
+            .hero-banner {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-avatar-area {
+                display: none;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .main-content {
+                padding: 16px;
+            }
+
+            .topbar {
+                margin-bottom: 22px;
+            }
+
+            .welcome-text h1 {
+                font-size: 23px;
+            }
+
+            .welcome-text p {
+                font-size: 12px;
+            }
+
+            .hero-banner {
+                padding: 26px 22px;
+                border-radius: 19px;
+            }
+
+            .hero-copy h2 {
+                font-size: 25px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .activity-item {
+                grid-template-columns: auto 1fr;
+            }
+
+            .activity-score {
+                grid-column: 2;
+                text-align: left;
+            }
+
+            .panel {
+                padding: 19px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div
+        class="sidebar-overlay"
+        id="sidebarOverlay"
+        onclick="closeSidebar()"
+    ></div>
+
+    <div class="dashboard-layout">
+
+        <!-- SIDEBAR -->
+
+        <aside class="sidebar" id="sidebar">
+
+            <div class="brand">
+
+                <div class="brand-logo">
+                    ⚓
+                </div>
+
+                <div class="brand-text">
+                    <h2>Avatar AMSA</h2>
+                    <p>Final Examination Assistant</p>
+                </div>
+
+            </div>
+
+            <p class="menu-label">
+                Main Menu
+            </p>
+
+            <nav class="nav-menu">
+
+                <a href="#" class="nav-link active">
+                    <span class="nav-icon">⌂</span>
+                    Dashboard
+                </a>
+
+                <a href="#" class="nav-link">
+                    <span class="nav-icon">🎙</span>
+                    Practice Examination
+                </a>
+
+                <a href="#" class="nav-link">
+                    <span class="nav-icon">📊</span>
+                    Performance
+                </a>
+
+                <a href="#" class="nav-link">
+                    <span class="nav-icon">📚</span>
+                    Study Resources
+                </a>
+
+                <a href="#" class="nav-link">
+                    <span class="nav-icon">🕘</span>
+                    Examination History
+                </a>
+
+                <a href="#" class="nav-link">
+                    <span class="nav-icon">👤</span>
+                    My Profile
+                </a>
+
+                <a href="#" class="nav-link">
+                    <span class="nav-icon">⚙</span>
+                    Settings
+                </a>
+
+            </nav>
+
+            <div class="sidebar-bottom">
+
+                <div class="student-card">
+
+                    <div class="avatar">
+                        TL
+                    </div>
+
+                    <div class="student-info">
+                        <h4>Tasnim Lamia</h4>
+                        <p>Student Account</p>
+                    </div>
+
+                </div>
+
+                <button
+                    type="button"
+                    class="logout-button"
+                    onclick="logout()"
+                >
+                    ↪ Log Out
+                </button>
+
+            </div>
+
+        </aside>
+
+        <!-- MAIN DASHBOARD -->
+
+        <main class="main-content">
+
+            <header class="topbar">
+
+                <div class="topbar-left">
+
+                    <button
+                        type="button"
+                        class="mobile-menu-button"
+                        onclick="openSidebar()"
+                    >
+                        ☰
+                    </button>
+
+                    <div class="welcome-text">
+                        <h1>Good evening, Tasnim</h1>
+                        <p>
+                            Continue preparing for your AMSA final oral examination.
+                        </p>
+                    </div>
+
+                </div>
+
+                <div class="topbar-actions">
+
+                    <button
+                        type="button"
+                        class="icon-button"
+                        title="Notifications"
+                    >
+                        🔔
+                        <span class="notification-dot"></span>
+                    </button>
+
+                    <div class="profile-mini">
+
+                        <div class="avatar">
+                            TL
+                        </div>
+
+                        <div>
+                            <h4>Tasnim Lamia</h4>
+                            <p>Student</p>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </header>
+
+            <!-- HERO -->
+
+            <section class="hero-banner">
+
+                <div class="hero-copy">
+
+                    <span class="hero-label">
+                        AI Examination Practice
+                    </span>
+
+                    <h2>
+                        Ready to practise your next oral examination?
+                    </h2>
+
+                    <p>
+                        Start a realistic AI-powered AMSA examination session,
+                        answer oral questions, and receive instant feedback on
+                        your knowledge, communication, and confidence.
+                    </p>
+
+                    <button
+                        type="button"
+                        class="start-button"
+                        onclick="startExamination()"
+                    >
+                        🎙 Start Practice Examination
+                    </button>
+
+                </div>
+
+                <div class="hero-avatar-area">
+
+                    <div class="ai-avatar">
+                        👨‍✈️
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- STATISTICS -->
+
+            <section class="stats-grid">
+
+                <article class="stat-card">
+
+                    <div class="stat-top">
+                        <div class="stat-icon">🎙</div>
+                        <span class="trend">+2 this week</span>
+                    </div>
+
+                    <h3>12</h3>
+                    <p>Practice sessions completed</p>
+
+                </article>
+
+                <article class="stat-card">
+
+                    <div class="stat-top">
+                        <div class="stat-icon">⭐</div>
+                        <span class="trend">+6%</span>
+                    </div>
+
+                    <h3>78%</h3>
+                    <p>Average examination score</p>
+
+                </article>
+
+                <article class="stat-card">
+
+                    <div class="stat-top">
+                        <div class="stat-icon">⏱</div>
+                        <span class="trend">3.5 hours</span>
+                    </div>
+
+                    <h3>8.4h</h3>
+                    <p>Total preparation time</p>
+
+                </article>
+
+                <article class="stat-card">
+
+                    <div class="stat-top">
+                        <div class="stat-icon">🏆</div>
+                        <span class="trend">Good progress</span>
+                    </div>
+
+                    <h3>82%</h3>
+                    <p>Overall examination readiness</p>
+
+                </article>
+
+            </section>
+
+            <!-- LOWER CONTENT -->
+
+            <section class="content-grid">
+
+                <!-- RECENT SESSIONS -->
+
+                <article class="panel">
+
+                    <div class="panel-header">
+                        <h3>Recent Practice Sessions</h3>
+                        <a href="#" class="view-all">
+                            View all
+                        </a>
+                    </div>
+
+                    <div class="activity-list">
+
+                        <div class="activity-item">
+
+                            <div class="activity-icon">
+                                ⚙
+                            </div>
+
+                            <div class="activity-text">
+                                <h4>Marine Engineering Oral Practice</h4>
+                                <p>Completed today · 32 minutes</p>
+                            </div>
+
+                            <div class="activity-score">
+                                <strong>84%</strong>
+                                <span>Excellent</span>
+                            </div>
+
+                        </div>
+
+                        <div class="activity-item">
+
+                            <div class="activity-icon">
+                                🚢
+                            </div>
+
+                            <div class="activity-text">
+                                <h4>Ship Safety and Emergency Procedures</h4>
+                                <p>Completed 2 days ago · 28 minutes</p>
+                            </div>
+
+                            <div class="activity-score">
+                                <strong>76%</strong>
+                                <span>Good</span>
+                            </div>
+
+                        </div>
+
+                        <div class="activity-item">
+
+                            <div class="activity-icon">
+                                🔧
+                            </div>
+
+                            <div class="activity-text">
+                                <h4>Engine Maintenance and Fault Diagnosis</h4>
+                                <p>Completed 5 days ago · 41 minutes</p>
+                            </div>
+
+                            <div class="activity-score">
+                                <strong>71%</strong>
+                                <span>Needs review</span>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+                <!-- PROGRESS -->
+
+                <article class="panel">
+
+                    <div class="panel-header">
+                        <h3>Your Progress</h3>
+                        <a href="#" class="view-all">
+                            Full report
+                        </a>
+                    </div>
+
+                    <div class="progress-list">
+
+                        <div class="progress-item">
+
+                            <div class="progress-label">
+                                <span>Technical Knowledge</span>
+                                <span>82%</span>
+                            </div>
+
+                            <div class="progress-track">
+                                <div
+                                    class="progress-fill"
+                                    style="width: 82%;"
+                                ></div>
+                            </div>
+
+                        </div>
+
+                        <div class="progress-item">
+
+                            <div class="progress-label">
+                                <span>Communication</span>
+                                <span>74%</span>
+                            </div>
+
+                            <div class="progress-track">
+                                <div
+                                    class="progress-fill"
+                                    style="width: 74%;"
+                                ></div>
+                            </div>
+
+                        </div>
+
+                        <div class="progress-item">
+
+                            <div class="progress-label">
+                                <span>Confidence</span>
+                                <span>69%</span>
+                            </div>
+
+                            <div class="progress-track">
+                                <div
+                                    class="progress-fill"
+                                    style="width: 69%;"
+                                ></div>
+                            </div>
+
+                        </div>
+
+                        <div class="progress-item">
+
+                            <div class="progress-label">
+                                <span>Safety Procedures</span>
+                                <span>88%</span>
+                            </div>
+
+                            <div class="progress-track">
+                                <div
+                                    class="progress-fill"
+                                    style="width: 88%;"
+                                ></div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="readiness-card">
+
+                        <h4>
+                            Recommended focus
+                        </h4>
+
+                        <p>
+                            Continue practising communication and confidence.
+                            Try answering questions in complete, clear, and
+                            professional sentences.
+                        </p>
+
+                    </div>
+
+                </article>
+
+            </section>
+
+        </main>
+
+    </div>
+
+    <script>
+        const sidebar =
+            document.getElementById("sidebar");
+
+        const sidebarOverlay =
+            document.getElementById("sidebarOverlay");
+
+
+        function openSidebar() {
+            sidebar.classList.add("open");
+            sidebarOverlay.classList.add("show");
+        }
+
+
+        function closeSidebar() {
+            sidebar.classList.remove("open");
+            sidebarOverlay.classList.remove("show");
+        }
+
+
+        function startExamination() {
+            alert(
+                "Practice examination selected. " +
+                "Connect this button to your AI examiner page."
+            );
+
+            // Create exam.html and then use:
+            // window.location.href = "exam.html";
+        }
+
+
+        function logout() {
+            const confirmed =
+                confirm("Are you sure you want to log out?");
+
+            if (confirmed) {
+                window.location.href = "login.html";
+            }
+        }
+    </script>
+
+</body>
+</html>

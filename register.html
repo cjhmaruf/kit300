@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Create Account | Avatar AMSA</title>
+
+    <style>
+        :root {
+            --navy: #06233f;
+            --dark-navy: #03182c;
+            --teal: #07818c;
+            --light-teal: #e7f7f7;
+            --text-dark: #172b3a;
+            --text-grey: #667085;
+            --border: #d0d5dd;
+            --white: #ffffff;
+            --error: #d92d20;
+            --success: #067647;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
+
+            background:
+                radial-gradient(
+                    circle at 10% 10%,
+                    rgba(24, 183, 175, 0.28),
+                    transparent 32%
+                ),
+                radial-gradient(
+                    circle at 90% 85%,
+                    rgba(0, 100, 150, 0.22),
+                    transparent 30%
+                ),
+                linear-gradient(
+                    135deg,
+                    #02172b,
+                    #06415d,
+                    #087f8c
+                );
+        }
+
+        .register-wrapper {
+            width: 100%;
+            max-width: 1180px;
+            min-height: 740px;
+            display: grid;
+            grid-template-columns: 0.95fr 1.05fr;
+            overflow: hidden;
+            border-radius: 30px;
+            background: var(--white);
+
+            box-shadow:
+                0 35px 90px rgba(0, 0, 0, 0.35);
+        }
+
+        /* LEFT PANEL */
+
+        .left-panel {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 58px;
+            overflow: hidden;
+            color: white;
+
+            background:
+                linear-gradient(
+                    150deg,
+                    rgba(3, 24, 44, 0.97),
+                    rgba(5, 83, 106, 0.94),
+                    rgba(7, 129, 140, 0.9)
+                );
+        }
+
+        .left-panel::before {
+            content: "";
+            position: absolute;
+            width: 340px;
+            height: 340px;
+            border-radius: 50%;
+            top: -150px;
+            right: -120px;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .left-panel::after {
+            content: "";
+            position: absolute;
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            bottom: -100px;
+            left: -90px;
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .brand {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .brand-logo {
+            width: 58px;
+            height: 58px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 18px;
+            font-size: 30px;
+
+            background: rgba(255, 255, 255, 0.14);
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            backdrop-filter: blur(12px);
+        }
+
+        .brand-text h2 {
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+
+        .brand-text p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 13px;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 470px;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            margin-bottom: 22px;
+            padding: 9px 15px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: 0.6px;
+            text-transform: uppercase;
+
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+        }
+
+        .hero-content h1 {
+            font-size: 44px;
+            line-height: 1.16;
+            margin-bottom: 22px;
+        }
+
+        .hero-content p {
+            color: rgba(255, 255, 255, 0.78);
+            font-size: 16px;
+            line-height: 1.75;
+        }
+
+        .feature-list {
+            display: grid;
+            gap: 14px;
+            margin-top: 30px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: rgba(255, 255, 255, 0.88);
+            font-size: 14px;
+        }
+
+        .feature-icon {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .security-footer {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: rgba(255, 255, 255, 0.66);
+            font-size: 13px;
+        }
+
+        /* RIGHT PANEL */
+
+        .right-panel {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 48px 52px;
+            background: white;
+        }
+
+        .form-container {
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .mobile-brand {
+            display: none;
+        }
+
+        .account-badge {
+            display: inline-block;
+            padding: 8px 14px;
+            margin-bottom: 16px;
+            border-radius: 50px;
+            color: var(--teal);
+            background: var(--light-teal);
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .form-container h2 {
+            color: var(--navy);
+            font-size: 34px;
+            margin-bottom: 10px;
+        }
+
+        .form-description {
+            color: var(--text-grey);
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 27px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #344054;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #98a2b3;
+            font-size: 17px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            height: 54px;
+            padding: 0 46px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            outline: none;
+            color: var(--text-dark);
+            background: white;
+            font-size: 14px;
+            transition: 0.25s ease;
+        }
+
+        select {
+            padding-right: 15px;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: var(--teal);
+            box-shadow: 0 0 0 4px rgba(7, 129, 140, 0.12);
+        }
+
+        .password-toggle {
+            position: absolute;
+            top: 50%;
+            right: 14px;
+            transform: translateY(-50%);
+            border: none;
+            background: transparent;
+            color: var(--teal);
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .password-strength {
+            height: 5px;
+            margin-top: 9px;
+            overflow: hidden;
+            border-radius: 10px;
+            background: #eaecf0;
+        }
+
+        .strength-bar {
+            width: 0;
+            height: 100%;
+            border-radius: 10px;
+            transition: 0.3s;
+            background: #d92d20;
+        }
+
+        .strength-text {
+            margin-top: 6px;
+            color: #667085;
+            font-size: 12px;
+        }
+
+        .terms {
+            display: flex;
+            align-items: flex-start;
+            gap: 9px;
+            margin: 3px 0 22px;
+            color: #475467;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .terms input {
+            width: 16px;
+            height: 16px;
+            margin-top: 2px;
+            flex-shrink: 0;
+            accent-color: var(--teal);
+        }
+
+        a {
+            color: var(--teal);
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .create-button {
+            width: 100%;
+            height: 56px;
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.25s ease;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #07818c,
+                    #075d72
+                );
+
+            box-shadow:
+                0 14px 28px rgba(7, 129, 140, 0.27);
+        }
+
+        .create-button:hover {
+            transform: translateY(-2px);
+            box-shadow:
+                0 18px 34px rgba(7, 129, 140, 0.34);
+        }
+
+        .login-link {
+            margin-top: 24px;
+            text-align: center;
+            color: var(--text-grey);
+            font-size: 14px;
+        }
+
+        .error-box {
+            display: none;
+            padding: 13px 14px;
+            margin-bottom: 18px;
+            border-radius: 10px;
+            border: 1px solid #fecdca;
+            color: #b42318;
+            background: #fef3f2;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .success-box {
+            display: none;
+            padding: 13px 14px;
+            margin-bottom: 18px;
+            border-radius: 10px;
+            border: 1px solid #abefc6;
+            color: var(--success);
+            background: #ecfdf3;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .support-footer {
+            margin-top: 28px;
+            padding-top: 20px;
+            border-top: 1px solid #eaecf0;
+            text-align: center;
+            color: #98a2b3;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 950px) {
+            .register-wrapper {
+                max-width: 620px;
+                grid-template-columns: 1fr;
+            }
+
+            .left-panel {
+                display: none;
+            }
+
+            .right-panel {
+                padding: 42px 30px;
+            }
+
+            .mobile-brand {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 11px;
+                margin-bottom: 28px;
+                color: var(--navy);
+                font-size: 21px;
+                font-weight: bold;
+            }
+
+            .mobile-brand span {
+                width: 46px;
+                height: 46px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                border-radius: 14px;
+                background: var(--light-teal);
+                font-size: 23px;
+            }
+        }
+
+        @media (max-width: 560px) {
+            body {
+                padding: 12px;
+            }
+
+            .register-wrapper {
+                border-radius: 20px;
+            }
+
+            .right-panel {
+                padding: 32px 20px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+
+            .form-container h2 {
+                font-size: 29px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="register-wrapper">
+
+        <!-- LEFT PANEL -->
+
+        <section class="left-panel">
+
+            <div class="brand">
+
+                <div class="brand-logo">
+                    ⚓
+                </div>
+
+                <div class="brand-text">
+                    <h2>Avatar AMSA</h2>
+                    <p>Final Examination Assistant</p>
+                </div>
+
+            </div>
+
+            <div class="hero-content">
+
+                <span class="hero-badge">
+                    Start Your Preparation
+                </span>
+
+                <h1>
+                    Build your confidence before the final examination.
+                </h1>
+
+                <p>
+                    Create your student account to practise realistic AMSA
+                    oral examination scenarios and receive personalised
+                    AI-powered feedback.
+                </p>
+
+                <div class="feature-list">
+
+                    <div class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        Access realistic oral examination sessions
+                    </div>
+
+                    <div class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        Receive instant performance feedback
+                    </div>
+
+                    <div class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        Track your progress securely
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="security-footer">
+                <span>🔒</span>
+                Your personal information is securely protected
+            </div>
+
+        </section>
+
+        <!-- REGISTRATION FORM -->
+
+        <section class="right-panel">
+
+            <div class="form-container">
+
+                <div class="mobile-brand">
+                    <span>⚓</span>
+                    Avatar AMSA
+                </div>
+
+                <span class="account-badge">
+                    Student Registration
+                </span>
+
+                <h2>Create your account</h2>
+
+                <p class="form-description">
+                    Enter your details to begin your AMSA examination preparation.
+                </p>
+
+                <div class="error-box" id="errorBox">
+                    Please complete all fields correctly and make sure
+                    both passwords match.
+                </div>
+
+                <div class="success-box" id="successBox">
+                    Your account has been created successfully.
+                    Redirecting you to the login page...
+                </div>
+
+                <form id="registerForm">
+
+                    <div class="form-row">
+
+                        <div class="form-group">
+
+                            <label for="firstName">
+                                First Name
+                            </label>
+
+                            <div class="input-wrapper">
+
+                                <span class="input-icon">👤</span>
+
+                                <input
+                                    type="text"
+                                    id="firstName"
+                                    placeholder="First name"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label for="lastName">
+                                Last Name
+                            </label>
+
+                            <div class="input-wrapper">
+
+                                <span class="input-icon">👤</span>
+
+                                <input
+                                    type="text"
+                                    id="lastName"
+                                    placeholder="Last name"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="email">
+                            Email Address
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <span class="input-icon">✉</span>
+
+                            <input
+                                type="email"
+                                id="email"
+                                placeholder="student@example.com"
+                                autocomplete="email"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+                    <div class="form-row">
+
+                        <div class="form-group">
+
+                            <label for="studentId">
+                                Student ID
+                            </label>
+
+                            <div class="input-wrapper">
+
+                                <span class="input-icon">🪪</span>
+
+                                <input
+                                    type="text"
+                                    id="studentId"
+                                    placeholder="Enter student ID"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label for="accountType">
+                                Account Type
+                            </label>
+
+                            <select id="accountType" required>
+                                <option value="">
+                                    Select account type
+                                </option>
+
+                                <option value="student">
+                                    Student
+                                </option>
+
+                                <option value="educator">
+                                    Educator
+                                </option>
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="password">
+                            Password
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <span class="input-icon">🔑</span>
+
+                            <input
+                                type="password"
+                                id="password"
+                                placeholder="Create a strong password"
+                                autocomplete="new-password"
+                                required
+                            >
+
+                            <button
+                                type="button"
+                                class="password-toggle"
+                                id="passwordToggle"
+                            >
+                                Show
+                            </button>
+
+                        </div>
+
+                        <div class="password-strength">
+                            <div
+                                class="strength-bar"
+                                id="strengthBar"
+                            ></div>
+                        </div>
+
+                        <p
+                            class="strength-text"
+                            id="strengthText"
+                        >
+                            Use at least 8 characters.
+                        </p>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="confirmPassword">
+                            Confirm Password
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <span class="input-icon">🔒</span>
+
+                            <input
+                                type="password"
+                                id="confirmPassword"
+                                placeholder="Enter your password again"
+                                autocomplete="new-password"
+                                required
+                            >
+
+                            <button
+                                type="button"
+                                class="password-toggle"
+                                id="confirmPasswordToggle"
+                            >
+                                Show
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                    <label class="terms">
+
+                        <input
+                            type="checkbox"
+                            id="terms"
+                            required
+                        >
+
+                        <span>
+                            I agree to the
+                            <a href="#">Terms and Conditions</a>
+                            and
+                            <a href="#">Privacy Policy</a>.
+                        </span>
+
+                    </label>
+
+                    <button
+                        type="submit"
+                        class="create-button"
+                    >
+                        Create Account Securely
+                    </button>
+
+                </form>
+
+                <div class="login-link">
+                    Already have an account?
+
+                    <a href="login.html">
+                        Sign in
+                    </a>
+                </div>
+
+                <div class="support-footer">
+                    Need assistance? Contact the Avatar AMSA support team.
+                    <br>
+                    Secure examination preparation platform.
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <script>
+        const registerForm =
+            document.getElementById("registerForm");
+
+        const passwordInput =
+            document.getElementById("password");
+
+        const confirmPasswordInput =
+            document.getElementById("confirmPassword");
+
+        const passwordToggle =
+            document.getElementById("passwordToggle");
+
+        const confirmPasswordToggle =
+            document.getElementById("confirmPasswordToggle");
+
+        const strengthBar =
+            document.getElementById("strengthBar");
+
+        const strengthText =
+            document.getElementById("strengthText");
+
+        const errorBox =
+            document.getElementById("errorBox");
+
+        const successBox =
+            document.getElementById("successBox");
+
+
+        passwordToggle.addEventListener(
+            "click",
+            function () {
+
+                if (passwordInput.type === "password") {
+                    passwordInput.type = "text";
+                    passwordToggle.textContent = "Hide";
+                } else {
+                    passwordInput.type = "password";
+                    passwordToggle.textContent = "Show";
+                }
+
+            }
+        );
+
+
+        confirmPasswordToggle.addEventListener(
+            "click",
+            function () {
+
+                if (confirmPasswordInput.type === "password") {
+                    confirmPasswordInput.type = "text";
+                    confirmPasswordToggle.textContent = "Hide";
+                } else {
+                    confirmPasswordInput.type = "password";
+                    confirmPasswordToggle.textContent = "Show";
+                }
+
+            }
+        );
+
+
+        passwordInput.addEventListener(
+            "input",
+            function () {
+
+                const password = passwordInput.value;
+
+                let strength = 0;
+
+                if (password.length >= 8) {
+                    strength++;
+                }
+
+                if (/[A-Z]/.test(password)) {
+                    strength++;
+                }
+
+                if (/[0-9]/.test(password)) {
+                    strength++;
+                }
+
+                if (/[^A-Za-z0-9]/.test(password)) {
+                    strength++;
+                }
+
+
+                if (strength === 0) {
+                    strengthBar.style.width = "0%";
+                    strengthText.textContent =
+                        "Use at least 8 characters.";
+                }
+
+                if (strength === 1) {
+                    strengthBar.style.width = "25%";
+                    strengthBar.style.background = "#d92d20";
+                    strengthText.textContent = "Weak password";
+                }
+
+                if (strength === 2) {
+                    strengthBar.style.width = "50%";
+                    strengthBar.style.background = "#f79009";
+                    strengthText.textContent = "Medium password";
+                }
+
+                if (strength === 3) {
+                    strengthBar.style.width = "75%";
+                    strengthBar.style.background = "#12b76a";
+                    strengthText.textContent = "Strong password";
+                }
+
+                if (strength === 4) {
+                    strengthBar.style.width = "100%";
+                    strengthBar.style.background = "#067647";
+                    strengthText.textContent = "Very strong password";
+                }
+
+            }
+        );
+
+
+        registerForm.addEventListener(
+            "submit",
+            function (event) {
+
+                event.preventDefault();
+
+                const firstName =
+                    document.getElementById("firstName").value.trim();
+
+                const lastName =
+                    document.getElementById("lastName").value.trim();
+
+                const email =
+                    document.getElementById("email").value.trim();
+
+                const studentId =
+                    document.getElementById("studentId").value.trim();
+
+                const accountType =
+                    document.getElementById("accountType").value;
+
+                const password =
+                    passwordInput.value;
+
+                const confirmPassword =
+                    confirmPasswordInput.value;
+
+                const termsAccepted =
+                    document.getElementById("terms").checked;
+
+                const validEmail =
+                    email.includes("@") &&
+                    email.includes(".");
+
+                const validPassword =
+                    password.length >= 8;
+
+                const passwordsMatch =
+                    password === confirmPassword;
+
+
+                if (
+                    firstName === "" ||
+                    lastName === "" ||
+                    !validEmail ||
+                    studentId === "" ||
+                    accountType === "" ||
+                    !validPassword ||
+                    !passwordsMatch ||
+                    !termsAccepted
+                ) {
+                    errorBox.style.display = "block";
+                    successBox.style.display = "none";
+                    return;
+                }
+
+                errorBox.style.display = "none";
+                successBox.style.display = "block";
+
+                registerForm.reset();
+
+                strengthBar.style.width = "0%";
+
+                strengthText.textContent =
+                    "Use at least 8 characters.";
+
+                setTimeout(
+                    function () {
+                        window.location.href = "login.html";
+                    },
+                    2000
+                );
+
+            }
+        );
+    </script>
+
+</body>
+</html>
