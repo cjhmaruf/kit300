@@ -44,9 +44,32 @@ if (ALLOWED_ORIGINS === '*') {
   app.use(cors({ origin: origins }));
 }
 
-// serve the widget + demo so the whole thing works from one place while testing
+// Serve the whole site from this one server during local dev, so the real pages
+// (login.html, register.html, forgot-password.html, dashboard.html - all one level
+// up from this "ai chatbot" folder) and the chatbot's own widget/demo files can all
+// be opened from http://localhost:3000/... without needing a second web server.
+const REPO_ROOT = path.join(__dirname, '..', '..');
+
+// IMPORTANT: block this server's own backend folder from ever being handed out as a
+// static file. Serving the repo root is convenient for the front-end pages, but this
+// folder holds .env (the API key) and node_modules (our dependencies' source) and
+// neither of those should ever be reachable over HTTP, dev or not.
+app.use((req, res, next) => {
+  if (req.path.startsWith('/ai chatbot/server') || req.path.startsWith('/ai%20chatbot/server')) {
+    return res.status(404).end();
+  }
+  next();
+});
+
 app.use('/widget', express.static(path.join(__dirname, '..', 'widget')));
-app.use(express.static(path.join(__dirname, '..')));
+
+// convenience alias so http://localhost:3000/demo.html still works without the
+// "ai chatbot/" prefix in the URL, since that's the natural link to hand someone
+app.get('/demo.html', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'demo.html'));
+});
+
+app.use(express.static(REPO_ROOT)); // dotfiles like .env are ignored by express.static by default
 
 // ---- load the knowledge base the assistant answers from --------------------
 
