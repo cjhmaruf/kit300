@@ -1,11 +1,11 @@
-# Avatar AMSA — AI Examiner Chatbot
+# Avatar AMSA — Help Assistant Chatbot
 
-An oral-exam practice chatbot for the Avatar AMSA project. A student is asked
-client-approved AMSA-style questions one at a time, answers by typing (or speaking),
-and gets short, supportive, keyword-grounded feedback. It **does not grade, score, or
-certify** anyone — that stays with human examiners and AMSA (risk R4).
+A help/navigation assistant for the Avatar AMSA dashboard. It answers "how do I..."
+questions about using the app — signing in, creating an account, resetting a password,
+finding things in the dashboard. It is **not** the oral examiner and does not run
+quizzes; that's a separate part of the project.
 
-It is built to drop onto the existing dashboard — or any future rebuild of it — with a
+It's built to drop onto the existing dashboard — or any future rebuild of it — with a
 single connection, and it does not modify any of the existing repo files.
 
 ## What's here
@@ -13,21 +13,19 @@ single connection, and it does not modify any of the existing repo files.
 ```
 ai chatbot/
 ├── widget/
-│   └── amsa-chatbot.js     # the drop-in front-end widget (self-contained, one file)
+│   └── amsa-chatbot.js     # the drop-in help-chat widget (self-contained, one file)
 ├── server/
-│   ├── server.js           # backend proxy: holds the API key, grounds feedback
+│   ├── server.js           # backend: holds the API key, answers from the knowledge base
 │   ├── package.json
 │   ├── .env.example        # copy to .env and fill in
 │   └── .gitignore          # keeps .env and node_modules out of git
 ├── data/
-│   └── questions.json      # PLACEHOLDER question bank - replace with approved content
+│   └── knowledge.md        # what the assistant is allowed to answer from - edit this
 ├── demo.html               # test page + copy-paste embed snippet
 └── README.md
 ```
 
 ## The "one simple connection"
-
-To add the examiner to any page, add these two lines — that's the whole integration:
 
 ```html
 <script src="ai chatbot/widget/amsa-chatbot.js"></script>
@@ -37,16 +35,14 @@ To add the examiner to any page, add these two lines — that's the whole integr
 ```
 
 The widget injects its own styling and markup (themed to match the dashboard's
-navy/teal), so it doesn't depend on the host page's CSS and doesn't touch existing code.
-You can also wire the dashboard's existing "Practice Examination" button to
-`AMSAChatbot.open()`.
+navy/teal), so it doesn't depend on the host page's CSS. You can also open it from your
+own button with `AMSAChatbot.open()`.
 
 ## Why there's a backend server
 
-The LLM API key must never live in the browser (NFR:03 / risk R6), and students must
-not be able to read the answer key. So the widget only ever talks to `server.js`, and
-that server is the only thing that sees the API key and the model answers/keywords. The
-browser only receives question text and feedback.
+The LLM API key must never live in the browser — anyone could read it in dev tools. So
+the widget only ever talks to `server.js`, and that server is the only thing holding the
+key. This is the standard way to use an AI API from a website safely.
 
 ## Running it locally
 
@@ -55,7 +51,7 @@ Requires **Node.js 18+** (uses the built-in `fetch`).
 ```bash
 cd "ai chatbot/server"
 npm install
-cp .env.example .env      # then edit .env
+cp .env.example .env      # then edit .env and add your key
 npm start
 ```
 
@@ -65,54 +61,43 @@ Then open `http://localhost:3000/demo.html`.
 
 | Variable | Meaning |
 |---|---|
-| `AI_PROVIDER` | `openai` (default) or `gemini` |
-| `AI_API_KEY` | your key. **Leave blank to run without an LLM** (see below) |
-| `AI_MODEL` | e.g. `gpt-4o-mini` (OpenAI) or `gemini-2.5-flash` (Gemini) |
+| `AI_PROVIDER` | `gemini` (default) or `openai` |
+| `AI_API_KEY` | your key. Leave blank to run in fallback mode (a few canned FAQ answers) |
+| `AI_MODEL` | e.g. `gemini-flash-latest` (Gemini) or `gpt-4o-mini` (OpenAI) |
 | `PORT` | server port (default 3000) |
-| `QUESTIONS_PER_SESSION` | default questions per session |
 | `ALLOWED_ORIGINS` | comma-separated dashboard origins for CORS. Use `*` only for local testing |
 
-### It runs without an API key too
+A free Gemini API key works fine here — get one at https://aistudio.google.com/apikey.
 
-If `AI_API_KEY` is blank, or a provider call fails, the server falls back to a simple
-keyword-matching feedback mode so the flow never dead-ends. This is fine for showing the
-UX, but real feedback quality needs an LLM key. The same fallback also acts as a safety
-net if the API is down at runtime.
+### It runs without a key too
 
-## The question bank is a placeholder
+If `AI_API_KEY` is blank, or the provider call fails, the server falls back to a small
+set of hard-coded FAQ answers so the widget still does something useful. Real, flexible
+answers need a key.
 
-`data/questions.json` contains ~15 **clearly-marked placeholder** questions so the
-system works end-to-end. They are **not** official AMSA content. An AMC Search
-subject-matter expert should replace them with client-approved Master&nbsp;<45m questions,
-model answers, and feedback keywords before real use. Keep the same field structure:
+## What the assistant knows
 
-```json
-{
-  "id": "...",
-  "licenceType": "M45",
-  "topic": "...",
-  "difficulty": "Medium",
-  "scene": "Bridge",
-  "questionText": "...",
-  "keywords": ["...", "..."],
-  "modelAnswer": "..."
-}
-```
+The assistant only answers from `data/knowledge.md`. That file is written to match what
+the app **actually does today**, including being honest that some features (password
+reset emails, the practice exam launch) are still prototype stubs. When you build those
+out for real, update `knowledge.md` so the assistant's answers stay truthful.
 
-`keywords` and `modelAnswer` stay server-side and are never sent to the browser.
+## Security notes
 
-## Voice
+- The API key is server-side only and gitignored via `.env`.
+- The chat endpoint is rate-limited per IP (20 requests/minute) to protect the API quota.
+- Incoming messages and conversation history are length-capped and shape-validated —
+  the server doesn't trust whatever the browser sends.
+- Replies are rendered with `textContent`, not `innerHTML`, so nothing in a message can
+  inject HTML/script into the page.
+- The system prompt tells the model to ignore attempts to override its instructions or
+  reveal the prompt, and never to handle passwords.
+- For deployment: set `ALLOWED_ORIGINS` to the real dashboard origin(s), not `*`, and
+  serve everything over HTTPS.
 
-With `voice: true`, the widget uses the browser's built-in Web Speech API for
-speech-to-text and text-to-speech — free, no keys, set to Australian English (`en-AU`).
-Quality and accent handling are basic (relevant to risk R3), and typed input is always
-available as a fallback. To upgrade to ElevenLabs / a cloud STT provider later, the
-`speak()` function and the recognition setup in `amsa-chatbot.js` are the single place
-to swap.
+## Note on the wider app
 
-## Deployment notes (for later)
-
-- Set `ALLOWED_ORIGINS` to the real dashboard origin(s), not `*`.
-- Session state is currently in-memory; for per-student history that survives restarts
-  (backlog DB-09), move the session store to the project database.
-- Serve the widget and API over HTTPS.
+The login, register and forgot-password pages in this repo are currently front-end
+prototypes — they validate input in the browser but don't yet connect to a real account
+system or database. This help assistant is honest about that. Wiring up real
+authentication is a separate piece of work and can be added next.
