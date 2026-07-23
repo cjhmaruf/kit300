@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AMSA Chatbot | Demo & Embed Test</title>
+    <style>
+        :root {
+            --navy: #06233f;
+            --teal: #07818c;
+            --background: #f4f7fa;
+            --text-dark: #172b3a;
+            --text-grey: #667085;
+            --border: #e4e7ec;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, Helvetica, sans-serif; }
+        body { background: var(--background); color: var(--text-dark); padding: 48px 24px; }
+        .wrap { max-width: 720px; margin: 0 auto; }
+        h1 { color: var(--navy); font-size: 26px; margin-bottom: 6px; }
+        .sub { color: var(--text-grey); margin-bottom: 28px; }
+        .card { background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 24px; margin-bottom: 20px; }
+        .card h2 { font-size: 16px; color: var(--navy); margin-bottom: 12px; }
+        code, pre { background: #0d1b2a; color: #e8f7f7; border-radius: 8px; }
+        pre { padding: 14px; overflow-x: auto; font-size: 13px; line-height: 1.6; }
+        code { padding: 2px 6px; font-size: 13px; }
+        p { line-height: 1.6; color: var(--text-dark); margin-bottom: 10px; }
+        .pill { display: inline-block; background: #e8f7f7; color: var(--teal); font-size: 12px; padding: 3px 10px; border-radius: 20px; }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <h1>Avatar AMSA Examiner — Chatbot Demo</h1>
+        <p class="sub">This page is only a test harness. The chatbot itself is the floating button in the bottom-right corner. <span class="pill">Click it to start</span></p>
+
+        <div class="card">
+            <h2>The "one simple connection"</h2>
+            <p>To put this examiner on <em>any</em> page — including a rebuilt dashboard — you add exactly two lines. That's the entire integration:</p>
+            <pre>&lt;script src="ai chatbot/widget/amsa-chatbot.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+  AMSAChatbot.init({ apiBase: "http://localhost:3000/api" });
+&lt;/script&gt;</pre>
+            <p>Nothing else on the page needs to change, and none of the existing dashboard code is touched.</p>
+        </div>
+
+        <div class="card">
+            <h2>Options you can pass to init()</h2>
+            <pre>AMSAChatbot.init({
+  apiBase: "http://localhost:3000/api", // where the backend server is
+  licenceType: "M45",   // "", "M45", "MED1", "ENG3" - filters the question bank
+  topic: "",            // optional topic filter
+  questionCount: 6,     // how many questions per session
+  voice: true,          // browser speech-to-text + text-to-speech
+  startOpen: false,     // open the panel automatically on load
+  title: "AMSA Practice Examiner"
+});</pre>
+            <p>You can also call <code>AMSAChatbot.open()</code> / <code>AMSAChatbot.close()</code> — e.g. wire the dashboard's existing "Practice Examination" button to <code>AMSAChatbot.open()</code>.</p>
+        </div>
+    </div>
+
+    <!-- The actual embed - exactly what you'd paste into the dashboard -->
+    <script src="widget/amsa-chatbot.js"></script>
+    <script>
+        AMSAChatbot.init({
+            apiBase: "http://localhost:3000/api",
+            licenceType: "",
+            voice: true
+        });
+    </script>
+</body>
+</html>
