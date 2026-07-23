@@ -67,7 +67,7 @@ Then open `http://localhost:3000/demo.html`.
 |---|---|
 | `AI_PROVIDER` | `openai` (default) or `gemini` |
 | `AI_API_KEY` | your key. **Leave blank to run without an LLM** (see below) |
-| `AI_MODEL` | e.g. `gpt-4o-mini` (OpenAI) or `gemini-1.5-flash` (Gemini) |
+| `AI_MODEL` | e.g. `gpt-4o-mini` (OpenAI) or `gemini-2.5-flash` (Gemini) |
 | `PORT` | server port (default 3000) |
 | `QUESTIONS_PER_SESSION` | default questions per session |
 | `ALLOWED_ORIGINS` | comma-separated dashboard origins for CORS. Use `*` only for local testing |
