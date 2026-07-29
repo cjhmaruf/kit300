@@ -1,0 +1,19 @@
+{
+  "name": "amsa-chatbot-server",
+  "version": "0.1.0",
+  "description": "Backend proxy for the Avatar AMSA examiner chatbot. Holds the LLM API key server-side and grounds feedback in the client-approved question bank.",
+  "main": "server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2"
+  }
+}
