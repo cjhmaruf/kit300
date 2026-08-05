@@ -553,6 +553,16 @@ namespace Convai.Scripts.Runtime.Features
             Animator animator = _currentNPC.GetComponent<Animator>();
             NavMeshAgent navMeshAgent = _currentNPC.GetComponent<NavMeshAgent>();
 
+            // Guard: skip gracefully if this NPC's NavMeshAgent isn't usable (e.g. intentionally
+            // disabled to keep the character stationary). Prevents spamming
+            // "SetDestination can only be called on an active agent..." every frame.
+            if (navMeshAgent == null || !navMeshAgent.enabled || !navMeshAgent.isOnNavMesh)
+            {
+                ConvaiLogger.DebugLog($"MoveTo skipped for {_currentNPC.name}: NavMeshAgent is disabled or not on a NavMesh.", ConvaiLogger.LogCategory.Actions);
+                yield break;
+            }
+
+
             SetupAnimationAndNavigation(animator, navMeshAgent);
 
             Vector3 targetDestination = CalculateTargetDestination(target);

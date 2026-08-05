@@ -63,14 +63,12 @@ namespace Convai.Scripts.Runtime.UI
             if (_panelCanvasGroup.alpha == 0)
             {
                 ToggleSettingsPanel(true);
-                Cursor.lockState = CursorLockMode.None;
-                Cursor.visible = true;
+                SafeSetCursorLock(false);
             }
             else
             {
                 ToggleSettingsPanel(false);
-                Cursor.lockState = CursorLockMode.Locked;
-                Cursor.visible = false;
+                SafeSetCursorLock(true);
             }
         }
 
@@ -92,7 +90,7 @@ namespace Convai.Scripts.Runtime.UI
                     _uiAppearanceSettings.FadeOutCurrentAppearance();
 
                 // Set the cursor lock state to none
-                Cursor.lockState = CursorLockMode.None;
+                SafeSetCursorLock(false);
             }
             else
             {
@@ -106,7 +104,7 @@ namespace Convai.Scripts.Runtime.UI
                     _uiAppearanceSettings.FadeInCurrentAppearance();
 
                 // Set the cursor lock state to locked
-                Cursor.lockState = CursorLockMode.Locked;
+                SafeSetCursorLock(true);
 
                 // Save values when the settings panel is closed
                 UISaveLoadSystem.Instance.SaveValues();
@@ -152,7 +150,32 @@ namespace Convai.Scripts.Runtime.UI
             _fadeCanvas.OnCurrentFadeCompleted -= DeactivatePanel;
         }
 
-        private void ActivatePanel()
+        
+
+        /// <summary>
+        ///     Safely applies a cursor lock state change. On WebGL builds, programmatic Pointer
+        ///     Lock requests frequently fail (SecurityError/NotAllowedError/WrongDocumentError
+        ///     depending on browser/context), and an uncaught failure here triggers Unity's
+        ///     default WebGL error handler, which pops a blocking alert() and freezes the whole
+        ///     page. We skip locking entirely on WebGL and guard the non-WebGL path too.
+        /// </summary>
+        private static void SafeSetCursorLock(bool locked)
+        {
+#if UNITY_WEBGL && !UNITY_EDITOR
+            Cursor.visible = true;
+#else
+            try
+            {
+                Cursor.lockState = locked ? CursorLockMode.Locked : CursorLockMode.None;
+                Cursor.visible = !locked;
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogWarning("[UISettingsPanel] Cursor lock request failed: " + e.Message);
+            }
+#endif
+        }
+private void ActivatePanel()
         {
             _panelCanvasGroup.gameObject.SetActive(true);
         }

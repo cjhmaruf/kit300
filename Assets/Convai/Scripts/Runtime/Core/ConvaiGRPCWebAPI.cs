@@ -27,6 +27,8 @@ namespace Convai.Scripts.Runtime.Core
         private ConvaiNPC _currentInteractingNPC; // The NPC currently targeted for interaction
         private ConvaiNPC _interactionCandidateNPC; // The NPC currently in player focus (candidate)
         private string _lastReceivedText = string.Empty; // Cache last text response for UI optimization
+        private bool _isRecording = false; // Guards against duplicate start/stop JS calls to reduce SDK race conditions
+
         private float _audioVolume = 1.0f; // Internal cache for volume reported by JS
 
         // Public getter for the currently interacting NPC
@@ -255,6 +257,13 @@ namespace Convai.Scripts.Runtime.Core
         /// </summary>
         public void RequestStartRecordAudio()
         {
+            if (_isRecording)
+            {
+                ConvaiLogger.Warn($"[{nameof(ConvaiGRPCWebAPI)}] RequestStartRecordAudio ignored: already recording.", ConvaiLogger.LogCategory.Character);
+                return;
+            }
+            _isRecording = true;
+
             // Set/Confirm the interaction target before starting audio
             SetInteractionTarget(_interactionCandidateNPC);
 
@@ -279,6 +288,13 @@ namespace Convai.Scripts.Runtime.Core
         /// </summary>
         public void RequestStopRecordAudio()
         {
+            if (!_isRecording)
+            {
+                ConvaiLogger.Warn($"[{nameof(ConvaiGRPCWebAPI)}] RequestStopRecordAudio ignored: not currently recording.", ConvaiLogger.LogCategory.Character);
+                return;
+            }
+            _isRecording = false;
+
             // No need to SetInteractionTarget here, stop applies to the current target.
             if (_currentInteractingNPC == null)
             {

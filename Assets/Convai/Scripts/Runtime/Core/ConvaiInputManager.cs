@@ -92,7 +92,11 @@ namespace Convai.Scripts.Runtime.Core
 
             Instance = this;
 
-            LockCursor(true);
+            // NOTE: Removed automatic cursor lock on startup. In WebGL builds, requesting
+            // Pointer Lock without a direct, synchronous user gesture reliably fails, and an
+            // uncaught failure here can trigger Unity's default WebGL error handler, which pops
+            // a blocking alert() and freezes the entire page (including Talk/chat input) until
+            // manually dismissed. See LockCursor() below, which is now WebGL-safe as well.
         }
 
         /// <summary>
@@ -206,10 +210,26 @@ namespace Convai.Scripts.Runtime.Core
 #endif
         }
 
-        private static void LockCursor(bool lockState)
+private static void LockCursor(bool lockState)
         {
-            Cursor.lockState = lockState ? CursorLockMode.Locked : CursorLockMode.None;
-            Cursor.visible = !lockState;
+#if UNITY_WEBGL && !UNITY_EDITOR
+            // Browser Pointer Lock requires a direct, synchronous user gesture and frequently
+            // throws (SecurityError/NotAllowedError/WrongDocumentError depending on context).
+            // An uncaught failure here freezes the whole page via Unity's default WebGL error
+            // handler, so we intentionally skip programmatic cursor locking on WebGL entirely.
+            Cursor.visible = true;
+            return;
+#else
+            try
+            {
+                Cursor.lockState = lockState ? CursorLockMode.Locked : CursorLockMode.None;
+                Cursor.visible = !lockState;
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogWarning("[ConvaiInputManager] Cursor lock request failed: " + e.Message);
+            }
+#endif
         }
 
 #if ENABLE_INPUT_SYSTEM

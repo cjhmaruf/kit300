@@ -17,7 +17,7 @@ MonoBehaviour:
   _apiEnvironment: 0
   _serverUrl: https://live.convai.com
   _customRestBaseUrl: 
-  _defaultMicrophoneDeviceId: 
+  _defaultMicrophoneDeviceId: Microphone (Realtek(R) Audio)
   _connectionTimeout: 30
   _characterAudioVolume: 1
   _audioFeedbackEnabled: 1

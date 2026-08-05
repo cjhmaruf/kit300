@@ -1,6 +1,8 @@
 using Convai.Scripts.Runtime.Core;
 using Convai.Scripts.Runtime.UI;
 using UnityEngine;
+
+using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
 
 namespace Convai.Scripts.Runtime.Addons
@@ -37,6 +39,8 @@ namespace Convai.Scripts.Runtime.Addons
         private CharacterController _characterController;
         private Vector3 _moveDirection = Vector3.zero;
         private float _rotationX;
+        private float _rotationY;
+
 
         //Singleton Instance
         public static ConvaiPlayerMovement Instance { get; private set; }
@@ -70,30 +74,15 @@ namespace Convai.Scripts.Runtime.Addons
         }
 
 
-        private void MovePlayer()
+private void MovePlayer()
         {
-            Vector3 horizontalMovement = Vector3.zero;
-
-            if (!EventSystem.current.IsPointerOverGameObject() && !UIUtilities.IsAnyInputFieldFocused())
-            {
-                Vector3 forward = transform.TransformDirection(Vector3.forward);
-                Vector3 right = transform.TransformDirection(Vector3.right);
-
-                float speed = ConvaiInputManager.Instance.isRunning ? runningSpeed : walkingSpeed;
-
-                Vector2 moveVector = ConvaiInputManager.Instance.moveVector;
-                float curSpeedX = speed * moveVector.x;
-                float curSpeedY = speed * moveVector.y;
-
-                horizontalMovement = forward * curSpeedY + right * curSpeedX;
-            }
-
+            // Movement disabled: player is locked in place for a static face-to-face interaction.
             if (!_characterController.isGrounded)
-                // Apply gravity only when canMove is true
                 _moveDirection.y -= gravity * Time.deltaTime;
+            else
+                _moveDirection.y = 0f;
 
-            // Move the character
-            _characterController.Move((_moveDirection + horizontalMovement) * Time.deltaTime);
+            _characterController.Move(_moveDirection * Time.deltaTime);
         }
 
         private void Jump()
@@ -101,18 +90,25 @@ namespace Convai.Scripts.Runtime.Addons
             if (_characterController.isGrounded && !UIUtilities.IsAnyInputFieldFocused()) _moveDirection.y = jumpSpeed;
         }
 
-        private void RotatePlayerAndCamera()
+private void RotatePlayerAndCamera()
         {
-            if (Cursor.lockState != CursorLockMode.Locked) return;
+            if (UIUtilities.IsAnyInputFieldFocused()) return;
 
-            // Vertical rotation
-            _rotationX -= ConvaiInputManager.Instance.lookVector.y * lookSpeedMultiplier;
+            Vector2 mouseDelta = Mouse.current != null ? Mouse.current.delta.ReadValue() : Vector2.zero;
+
+            float mouseX = mouseDelta.x * lookSpeedMultiplier * 0.1f;
+            float mouseY = mouseDelta.y * lookSpeedMultiplier * 0.1f;
+
+            _rotationX -= mouseY;
             _rotationX = Mathf.Clamp(_rotationX, -lookXLimit, lookXLimit);
-            playerCamera.transform.localRotation = Quaternion.Euler(_rotationX, 0, 0);
 
-            // Horizontal rotation
-            float rotationY = ConvaiInputManager.Instance.lookVector.x * lookSpeedMultiplier;
-            transform.rotation *= Quaternion.Euler(0, rotationY, 0);
+            if (playerCamera != null)
+            {
+                playerCamera.transform.localRotation =
+                    Quaternion.Euler(_rotationX, 0f, 0f);
+            }
+
+            transform.Rotate(Vector3.up * mouseX);
         }
     }
 }
